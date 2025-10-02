@@ -1,30 +1,19 @@
-import com.android.build.gradle.internal.tasks.factory.dependsOn
-
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
 }
 
-// TODO: Update value to your plugin's name.
-val pluginName = "GodotAndroidPluginTemplate"
-
-// TODO: Update value to match your plugin's package name.
-val pluginPackageName = "org.godotengine.plugin.android.template"
+val pluginName = "GodotFCM"
+val pluginPackageName = "org.godot.plugins.fcm"
 
 android {
     namespace = pluginPackageName
-    compileSdk = 33
-
-    buildFeatures {
-        buildConfig = true
-    }
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 21
-
         manifestPlaceholders["godotPluginName"] = pluginName
         manifestPlaceholders["godotPluginPackageName"] = pluginPackageName
-        buildConfigField("String", "GODOT_PLUGIN_NAME", "\"${pluginName}\"")
         setProperty("archivesBaseName", pluginName)
     }
 
@@ -35,14 +24,19 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+
+    buildFeatures {
+        buildConfig = false
+    }
 }
 
 dependencies {
-    implementation("org.godotengine:godot:4.3.0.stable")
-    // TODO: Additional dependencies should be added to export_plugin.gd as well.
+    implementation("org.godotengine:godot:4.5.0.stable")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
+    implementation("com.google.firebase:firebase-messaging-ktx")
 }
 
-// BUILD TASKS DEFINITION
 val copyDebugAARToDemoAddons by tasks.registering(Copy::class) {
     description = "Copies the generated debug AAR binary to the plugin's addons directory"
     from("build/outputs/aar")
@@ -74,8 +68,4 @@ val copyAddonsToDemo by tasks.registering(Copy::class) {
 
 tasks.named("assemble").configure {
     finalizedBy(copyAddonsToDemo)
-}
-
-tasks.named<Delete>("clean").apply {
-    dependsOn(cleanDemoAddons)
 }

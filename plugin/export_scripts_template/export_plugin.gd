@@ -17,8 +17,7 @@ func _exit_tree():
 
 
 class AndroidExportPlugin extends EditorExportPlugin:
-	# TODO: Update to your plugin's name.
-	var _plugin_name = "GodotAndroidPluginTemplate"
+	var _plugin_name = "GodotFCM"
 
 	func _supports_platform(platform):
 		if platform is EditorExportPlatformAndroid:
@@ -32,11 +31,16 @@ class AndroidExportPlugin extends EditorExportPlugin:
 			return PackedStringArray([_plugin_name + "/bin/release/" + _plugin_name + "-release.aar"])
 
 	func _get_android_dependencies(platform, debug):
-		# TODO: Add remote dependices here.
 		if debug:
-			return PackedStringArray([])
+			return PackedStringArray([
+				"com.google.firebase:firebase-messaging-ktx:24.0.0",
+				"com.google.android.gms:play-services-base:18.5.0",
+				])
 		else:
-			return PackedStringArray([])
+			return PackedStringArray([
+				"com.google.firebase:firebase-messaging-ktx:24.0.0",
+				"com.google.android.gms:play-services-base:18.5.0",
+				])
 
 	func _get_name():
 		return _plugin_name
